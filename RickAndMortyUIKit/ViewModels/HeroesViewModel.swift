@@ -60,9 +60,9 @@ class HeroesViewModel: NSObject {
         })
     }
     
-    func fetchNextPage(completion: @escaping() -> ()) {
-        self.apiService.downloadItem(url: nextUrl, completionHandler: { (data) in
-            self.heroes = data
+    func fetchNextPage(page: Int, completion: @escaping() -> ()) {
+        self.apiService.downloadItemOfPage(page: page, completionHandler: { (data) in
+            self.heroes! += data
             completion()
         })
     }

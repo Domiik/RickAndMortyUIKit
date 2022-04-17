@@ -30,14 +30,14 @@ class RickAndMortyTableViewCell: UITableViewCell {
     lazy var imageViewAva: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
-        imageView.layer.cornerRadius = 20
+        imageView.layer.cornerRadius = 16
         imageView.layer.masksToBounds = true
         return imageView
     }()
     
     lazy var nameLabel: UILabel = {
         let label = UILabel()
-        
+        label.font = UIFont.systemFont(ofSize: 20, weight: .medium)
         label.numberOfLines = 0
         label.textAlignment = .left
         
@@ -92,17 +92,16 @@ private extension RickAndMortyTableViewCell {
     
     func setupLayout() {
         self.imageViewAva.snp.makeConstraints {
-            $0.top.equalTo(safeAreaLayoutGuide.snp.top)
-            $0.leading.equalToSuperview().offset(5)
-            $0.width.equalTo(130)
-            $0.bottom.equalToSuperview().offset(-10)
+            $0.top.equalToSuperview().offset(10)
+            $0.leading.equalToSuperview().offset(10)
+            $0.height.width.equalTo(150)
         }
         
         self.nameLabel.snp.makeConstraints {
+            $0.top.equalTo(imageViewAva)
             $0.leading.equalTo(self.imageViewAva.snp.trailing).offset(10)
-            $0.top.equalToSuperview().offset(10)
             $0.trailing.equalToSuperview().offset(-5)
-            $0.height.equalTo(50)
+            $0.height.equalTo(70)
         }
         
         self.raceLabel.snp.makeConstraints {

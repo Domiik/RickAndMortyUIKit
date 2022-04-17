@@ -10,8 +10,6 @@ import SnapKit
 
 class RickAndMortyMenuViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    var isLoading = false
-    
     enum MenuRoute: String {
         case detailView
     }
@@ -19,9 +17,12 @@ class RickAndMortyMenuViewController: UIViewController, UITableViewDelegate, UIT
     private var heroesViewModel = HeroesViewModel()
     private var router: MenuRouter!
     
+    var page = 1
+    var hasMoreContent = true
+    
     lazy var tbl: UITableView = {
         let v = UITableView()
-        v.rowHeight = 150
+        v.rowHeight = 200
         v.separatorStyle = .none
         return v
     }()
@@ -39,14 +40,14 @@ class RickAndMortyMenuViewController: UIViewController, UITableViewDelegate, UIT
     
     func setupUI() {
         view.backgroundColor = .white
-        title = "Menu"
+        title = "Rick and Morty"
         navigationController?.navigationBar.prefersLargeTitles = true
-        tbl.delegate = self
-        tbl.dataSource = self
-        tbl.register(RickAndMortyTableViewCell.self, forCellReuseIdentifier: RickAndMortyTableViewCell.cellId)
+        self.tbl.delegate = self
+        self.tbl.dataSource = self
+        self.tbl.register(RickAndMortyTableViewCell.self, forCellReuseIdentifier: RickAndMortyTableViewCell.cellId)
         self.view.addSubview(tbl)
-        tbl.snp.makeConstraints { (make) in
-            make.edges.equalTo(self.view.safeAreaLayoutGuide)
+        self.tbl.snp.makeConstraints {
+            $0.edges.equalToSuperview()
         }
         
     }
@@ -72,70 +73,19 @@ extension RickAndMortyMenuViewController {
         router.navigate(to: .detailView, viewModel: heroesViewModel.viewModelForSelectedRow()!)
     }
     
-    //    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-    //        let position = scrollView.contentOffset.y
-    //        if position > (tbl.contentSize.height - 100 - scrollView.frame.size.height){
-    //            heroesViewModel.nextPage { }
-    //            heroesViewModel.fetchNextPage {
-    //                self.tbl.reloadData()
-    //            }
-    //        }
-    //    }
-    
-//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//        heroesViewModel.nextPage { }
-//        heroesViewModel.fetchNextPage {
-//            self.tbl.reloadData()
-//        }
-//    }
-    
-    private func createSpinnerFooter() -> UIView {
-          let footerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: 100))
-          
-          let spinner = UIActivityIndicatorView()
-          spinner.center = footerView.center
-          footerView.addSubview(spinner)
-          spinner.startAnimating()
-          
-          return footerView
-      }
-    
-    
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let position = scrollView.contentOffset.y
-        if position > (tbl.contentSize.height - 100 - scrollView.frame.size.height) {
-            // fetch more data
-            guard !apiCaller.isPaginating else {
-                // we are already fetch more data
-                return
-            }
-            self.tbl.tableFooterView = createSpinnerFooter()
-            self.heroesViewModel.nextPage { }
-            heroesViewModel.fetchNextPage {
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        let height = scrollView.frame.size.height
+        
+        if offsetY > contentHeight - height {
+            guard hasMoreContent else { return }
+            page += 1
+            heroesViewModel.fetchNextPage(page: page, completion: {
                 self.tbl.reloadData()
+            })
                 
-            }
-        }
-    }
-    
-    func loadMoreData() {
-        if !self.isLoading {
-            self.isLoading = true
-            DispatchQueue.global().async {
-                // Fake background loading task for 2 seconds
-                sleep(2)
-                self.heroesViewModel.nextPage { }
-                self.heroesViewModel.fetchNextPage {
-                    
-                }
-                // Download more data here
-                DispatchQueue.main.async {
-                    self.tbl.reloadData()
-                    self.isLoading = false
-                }
-            }
+            
         }
     }
 }
-

@@ -33,7 +33,7 @@ class RickAndMortyDetailViewController: UIViewController {
     
     lazy var imageViewAva: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
+        imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
         return imageView
     }()
@@ -41,8 +41,20 @@ class RickAndMortyDetailViewController: UIViewController {
     lazy var nameLabel: UILabel = {
         let label = UILabel()
         
+        label.font = UIFont.systemFont(ofSize: 20, weight: .medium)
         label.numberOfLines = 0
         label.textAlignment = .left
+        
+        return label
+    }()
+    
+    lazy var nameLabelDefault: UILabel = {
+        let label = UILabel()
+        
+        label.font = UIFont.systemFont(ofSize: 20, weight: .medium)
+        label.numberOfLines = 0
+        label.textAlignment = .left
+        label.text = "Имя героя: "
         
         return label
     }()
@@ -56,11 +68,44 @@ class RickAndMortyDetailViewController: UIViewController {
         return label
     }()
     
+    lazy var raceLabelDefault: UILabel = {
+        let label = UILabel()
+        
+        label.font = UIFont.systemFont(ofSize: 20, weight: .medium)
+        label.numberOfLines = 0
+        label.textAlignment = .left
+        label.text = "Расса: "
+        
+        return label
+    }()
+    
+    lazy var genderLabelDefault: UILabel = {
+        let label = UILabel()
+        
+        label.font = UIFont.systemFont(ofSize: 20, weight: .medium)
+        label.numberOfLines = 0
+        label.textAlignment = .left
+        label.text = "Пол: "
+        
+        return label
+    }()
+    
     lazy var genderLabel: UILabel = {
         let label = UILabel()
         
         label.numberOfLines = 0
         label.textAlignment = .left
+        
+        return label
+    }()
+    
+    lazy var statusLabelDefault: UILabel = {
+        let label = UILabel()
+        
+        label.font = UIFont.systemFont(ofSize: 20, weight: .medium)
+        label.numberOfLines = 0
+        label.textAlignment = .left
+        label.text = "Статус: "
         
         return label
     }()
@@ -74,14 +119,37 @@ class RickAndMortyDetailViewController: UIViewController {
         return label
     }()
     
+    lazy var geoLocationLabelDefault: UILabel = {
+        let label = UILabel()
+        
+        label.font = UIFont.systemFont(ofSize: 17, weight: .medium)
+        label.numberOfLines = 0
+        label.textAlignment = .left
+        label.text = "Последняя точка геолокации: "
+        
+        return label
+    }()
+    
     lazy var geoLocationLabel: UILabel = {
         let label = UILabel()
         
-        label.numberOfLines = 0
+        label.numberOfLines = 3
         label.textAlignment = .left
         
         return label
     }()
+    
+    lazy var numberOfEpisodesLabelDefault: UILabel = {
+        let label = UILabel()
+        
+        label.font = UIFont.systemFont(ofSize: 20, weight: .medium)
+        label.numberOfLines = 0
+        label.textAlignment = .left
+        label.text = "Количество эпизодов: "
+        
+        return label
+    }()
+
     
     lazy var numberOfEpisodesLabel: UILabel = {
         let label = UILabel()
@@ -96,8 +164,6 @@ class RickAndMortyDetailViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         commonInit()
-        
-
     }
 }
 
@@ -112,64 +178,108 @@ private extension RickAndMortyDetailViewController  {
     func prepareForLayout() {
         self.prepareForLayout(views: [
             self.imageViewAva,
+            self.nameLabelDefault,
             self.nameLabel,
+            self.raceLabelDefault,
             self.raceLabel,
+            self.genderLabelDefault,
             self.genderLabel,
+            self.statusLabelDefault,
             self.statusLabel,
+            self.geoLocationLabelDefault,
             self.geoLocationLabel,
+            self.numberOfEpisodesLabelDefault,
             self.numberOfEpisodesLabel
         ])
     }
     
     func setupLayout() {
         self.imageViewAva.snp.makeConstraints {
-            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(10)
+            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(5)
             $0.leading.equalToSuperview().offset(5)
             $0.trailing.equalToSuperview().offset(-5)
-            $0.height.equalTo(250)
+            $0.height.equalTo(150)
+        }
+        
+        self.nameLabelDefault.snp.makeConstraints {
+            $0.top.equalTo(self.imageViewAva.snp.bottom).offset(5)
+            $0.leading.equalToSuperview().offset(5)
+            $0.trailing.equalTo(self.nameLabel.snp.leading).offset(-5)
+            $0.height.equalTo(50)
         }
         
         self.nameLabel.snp.makeConstraints {
-            $0.top.equalTo(self.imageViewAva.snp.bottom).offset(10)
-            $0.leading.equalToSuperview().offset(5)
+            $0.top.equalTo(self.imageViewAva.snp.bottom).offset(5)
             $0.trailing.equalToSuperview().offset(-5)
             $0.height.equalTo(50)
         }
         
-        self.raceLabel.snp.makeConstraints {
-            $0.top.equalTo(self.nameLabel.snp.bottom).offset(10)
+        self.raceLabelDefault.snp.makeConstraints {
+            $0.top.equalTo(self.nameLabel.snp.bottom).offset(5)
             $0.leading.equalToSuperview().offset(5)
+            $0.trailing.equalTo(self.raceLabel.snp.leading).offset(-5)
+            $0.height.equalTo(30)
+        }
+        
+        self.raceLabel.snp.makeConstraints {
+            $0.top.equalTo(self.nameLabel.snp.bottom).offset(5)
             $0.trailing.equalToSuperview().offset(-5)
+            $0.height.equalTo(30)
+        }
+        
+        self.genderLabelDefault.snp.makeConstraints {
+            $0.top.equalTo(self.raceLabel.snp.bottom).offset(5)
+            $0.leading.equalToSuperview().offset(5)
+            $0.trailing.equalTo(self.genderLabel.snp.leading).offset(-5)
             $0.height.equalTo(30)
         }
         
         self.genderLabel.snp.makeConstraints {
-            $0.top.equalTo(self.raceLabel.snp.bottom).offset(10)
-            $0.leading.equalToSuperview().offset(5)
+            $0.top.equalTo(self.raceLabel.snp.bottom).offset(5)
             $0.trailing.equalToSuperview().offset(-5)
+            $0.height.equalTo(30)
+        }
+        
+        self.statusLabelDefault.snp.makeConstraints {
+            $0.top.equalTo(self.genderLabel.snp.bottom).offset(5)
+            $0.leading.equalToSuperview().offset(5)
+            $0.trailing.equalTo(self.statusLabel.snp.leading).offset(-5)
             $0.height.equalTo(30)
         }
         
         self.statusLabel.snp.makeConstraints {
-            $0.top.equalTo(self.genderLabel.snp.bottom).offset(10)
-            $0.leading.equalToSuperview().offset(5)
+            $0.top.equalTo(self.genderLabel.snp.bottom).offset(5)
             $0.trailing.equalToSuperview().offset(-5)
             $0.height.equalTo(30)
         }
         
-        self.geoLocationLabel.snp.makeConstraints {
-            $0.top.equalTo(self.statusLabel.snp.bottom).offset(10)
+        self.numberOfEpisodesLabelDefault.snp.makeConstraints {
+            $0.top.equalTo(self.statusLabel.snp.bottom).offset(5)
             $0.leading.equalToSuperview().offset(5)
-            $0.trailing.equalToSuperview().offset(-5)
-            $0.height.equalTo(30)
+            $0.trailing.equalTo(self.numberOfEpisodesLabel.snp.leading).offset(-5)
+            $0.height.equalTo(20)
         }
         
         self.numberOfEpisodesLabel.snp.makeConstraints {
-            $0.top.equalTo(self.geoLocationLabel.snp.bottom).offset(10)
-            $0.leading.equalToSuperview().offset(5)
+            $0.top.equalTo(self.statusLabel.snp.bottom).offset(5)
             $0.trailing.equalToSuperview().offset(-5)
-            $0.height.equalTo(30)
+            $0.height.equalTo(20)
         }
+        
+        self.geoLocationLabelDefault.snp.makeConstraints {
+            $0.top.equalTo(self.numberOfEpisodesLabel.snp.bottom).offset(5)
+            $0.leading.equalToSuperview().offset(5)
+            $0.trailing.equalTo(self.geoLocationLabel.snp.leading).offset(-5)
+            $0.height.equalTo(50)
+        }
+        
+        self.geoLocationLabel.snp.makeConstraints {
+            $0.top.equalTo(self.numberOfEpisodesLabel.snp.bottom).offset(5)
+            $0.trailing.equalToSuperview().offset(-5)
+            $0.height.equalTo(50)
+        }
+        
+        
     }
 }
 

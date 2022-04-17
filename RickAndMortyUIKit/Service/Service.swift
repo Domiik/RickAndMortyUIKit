@@ -22,6 +22,8 @@ enum ApiError: Error {
 
 class Service: NSObject {
     
+    private let baseURL = "https://rickandmortyapi.com/api"
+    
     func downloadNextPage(url: String,completionHandler: @escaping (InfoUrl) -> ()) {
         if Connectivity.isConnectedToInternet {
             AF.request(url).responseJSON { response in
@@ -47,6 +49,25 @@ class Service: NSObject {
         return nil
     }
     
+    
+    func downloadItemOfPage(page: Int, completionHandler: @escaping ([Hero]) -> ()) {
+        if Connectivity.isConnectedToInternet {
+            let endpoint = baseURL + "/character/?page=\(page)"
+            
+            guard let url = URL(string: endpoint) else {
+                
+                return
+            }
+            AF.request(url).responseJSON { response in
+                guard let data = response.data else { return }
+                if let currentHeroes = self.parseJSON(withData: data ) {
+                    completionHandler(currentHeroes)
+                }
+            }
+        } else {
+            print(ApiError.noConnection)
+        }
+    }
     
     func downloadItem(url: String,completionHandler: @escaping ([Hero]) -> ()) {
         if Connectivity.isConnectedToInternet {
